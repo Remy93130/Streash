@@ -18,10 +18,12 @@ public class Console {
 	private Scanner command;
 	private Map<String,Value> vars;
 	private boolean npi = true;
+	private ArrayList<String> order;
 	
 	public Console() {
 		scanner = new Scanner(System.in);
 		vars = new HashMap<String, Value>();
+		order = new ArrayList<String>();
 	}
 	
 	public void computeCommand() throws NoSuchAttributeException {
@@ -40,6 +42,9 @@ public class Console {
 				begin = nextTemp();
 			else {
 				begin = command.next();
+				if (!(isAlpha(begin))) 
+					throw new IllegalArgumentException("Illegal name for variable : "+begin);
+					
 				if (!(command.hasNext()))
 					throw new IllegalArgumentException("Too few arguments for variable affectation");
 	
@@ -51,8 +56,14 @@ public class Console {
 			if (command.hasNext())
 				throw new IllegalStateException("Too many arguments");
 			
-			vars.put(begin, v);
+			putVar(begin, v);
 		}
+	}
+	
+	private void putVar(String name, Value v) {
+		if (!(vars.containsKey(name)))
+			order.add(name);
+		vars.put(name, v);
 	}
 	
 	private void reverseScanner() {
@@ -86,8 +97,7 @@ public class Console {
 		if (expr.matches("<.*>")) return evaluateFunction(expr);
 		if (expr.startsWith("\"")) return CharChain.parse(expr, command);
 		if (expr.startsWith("{")) throw new IllegalStateException("Unhandled lambda type for the moment");
-		if (!isAlpha(expr) && isNumerical(expr)) return Number.parse(expr);
-		if (isAlpha(expr) && isNumerical(expr)) throw new IllegalArgumentException("Illegal name for variable : "+expr);
+		if (isNumerical(expr)) return Number.parse(expr);
 		
 		Value var = vars.get(expr);
 		if (var == null) throw new NoSuchElementException("No var named "+expr+" registered");
@@ -102,10 +112,10 @@ public class Console {
 		return func.evaluate();
 	}
 	private boolean isNumerical(String expr) {
-		return expr.matches("[1234567890/-]*");
+		return expr.matches("(-)?[0-9]*(/(-)?[0-9]*)?");
 	}
 	private boolean isAlpha(String expr) {
-		return expr.matches("[azertyuiopqsdfghjklmwxcvbn_]*");
+		return expr.matches("[a-zA-Z]{1}[a-zA-Z0-9_]*");
 	}
 	
 	public void computeMetaCommand(String name) throws NoSuchAttributeException {
@@ -150,18 +160,16 @@ public class Console {
 	}
 	
 	public void printVars() {
-		vars.entrySet().forEach( (e) -> { 
-			System.out.print(e.getKey()+" : "); 
-			System.out.println(e.getValue().getConsoleString()); 
+		order.forEach( (e) -> { 
+			System.out.print(e+" : "); 
+			System.out.println(vars.get(e).getConsoleString()); 
 			});
 	}
 	public void printVarsAlpha() {
-		vars.keySet().parallelStream().sorted().peek(
-				x -> {
-					System.out.println(x+" : ");
-					System.out.println(vars.get(x).getConsoleString());
-				}
-			);
+		order.stream().sorted().forEach( (e) -> { 
+			System.out.print(e+" : "); 
+			System.out.println(vars.get(e).getConsoleString()); 
+			});
 	}
 	public static void main(String[] args) throws NoSuchAttributeException {
 		Console log = new Console();
