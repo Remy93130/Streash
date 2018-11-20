@@ -1,0 +1,10 @@
+# IDE FILES
+
+.classpath
+.project
+_classpath.xml
+_project.xml
+
+# ====
+
+bin/*
