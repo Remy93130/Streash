@@ -21,6 +21,10 @@ public class SliceStream implements StreamVar{
 		return new SliceStream(s.duplicate(), a, b);
 	}
 	@Override
+	public String getType() {
+		return s.getType();
+	}
+	@Override
 	public String getConsoleString() {
 		return "Slice of "+s.getConsoleString()+" from the "+a+"th to the "+b+"th element";
 	}

@@ -23,6 +23,11 @@ public class RepeatStream implements StreamVar{
 	public String getConsoleString() {
 		return s.getConsoleString()+" repeated "+repeat+" times";
 	}
+	
+	@Override
+	public String getType() {
+		return s.getType();
+	}
 	@Override
 	public long print() {
 		float end;

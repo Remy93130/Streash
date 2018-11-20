@@ -6,7 +6,7 @@ import streash.vars.Number;
 import streash.vars.StreamVar;
 import streash.vars.Value;
 
-public class InfiniteIntegersStream implements StreamVar{
+public class InfiniteIntegersStream implements NumberStreamVar{
 	private long from;
 	private boolean reversed;
 	private Stream<Value> stream;

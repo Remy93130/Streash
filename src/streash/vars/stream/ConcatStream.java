@@ -10,10 +10,17 @@ public class ConcatStream implements StreamVar{
 	private StreamVar s2;
 	
 	public ConcatStream(StreamVar s1, StreamVar s2) {
+		if (!(s1.getType().equals(s2.getType())))
+			throw new IllegalStateException("Cannot concat two Streams of different generics");
+		
 		this.s1 = s1.duplicate();
 		this.s2 = s2.duplicate();
 	}
 	
+	@Override
+	public String getType(){
+		return s2.getType();
+	}
 	@Override
 	public StreamVar duplicate() {
 		return new ConcatStream(s1.duplicate(), s2.duplicate());

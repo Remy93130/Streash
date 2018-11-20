@@ -6,7 +6,7 @@ import streash.vars.Number;
 import streash.vars.StreamVar;
 import streash.vars.Value;
 
-public class FiboStream implements StreamVar{
+public class FiboStream implements NumberStreamVar{
 	private long from;
 	private long to;
 	private Stream<Value> stream;

@@ -7,7 +7,7 @@ import streash.vars.StreamVar;
 import streash.vars.Number;
 import streash.vars.Value;
 
-public class RandomStream implements StreamVar{
+public class RandomStream implements NumberStreamVar{
 	private long seed;
 	private long from;
 	private long to;

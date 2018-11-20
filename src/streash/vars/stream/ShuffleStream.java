@@ -26,6 +26,10 @@ public class ShuffleStream implements StreamVar{
 		return "Shuffled Stream of "+s.getConsoleString()+" with seed "+seed;
 	}
 	@Override
+	public String getType() {
+		return s.getType();
+	}
+	@Override
 	public long print() {
 		List<Value> list = s.duplicate().getStream().collect(Collectors.toList());
 		Collections.shuffle(list, new Random(seed));

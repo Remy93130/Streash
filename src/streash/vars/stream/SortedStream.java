@@ -25,6 +25,10 @@ public class SortedStream implements StreamVar{
 		return s.duplicate().getStream().sorted();
 	}
 	@Override
+	public String getType() {
+		return s.getType();
+	}
+	@Override
 	public long print() {
 		return s.duplicate().getStream().sorted().mapToLong(x -> {
 			System.out.println(x.getConsoleString());

@@ -3,6 +3,7 @@ package streash.vars.functions.pit;
 import streash.vars.StreamVar;
 import streash.vars.Value;
 import streash.vars.functions.AbstractFunction;
+import streash.vars.stream.NumberStreamVar;
 
 public class Sum extends AbstractFunction{
 	public Sum() {
@@ -12,7 +13,12 @@ public class Sum extends AbstractFunction{
 	public Value evaluate() {
 		super.evaluate();
 		Value[] args = super.getArgs();
-		if (args[0] instanceof StreamVar) return ((StreamVar) args[0]).sum();
+		if (args[0] instanceof StreamVar) {
+			StreamVar s = (StreamVar) args[0];
+			if (!(s.getType().equals(NumberStreamVar.type())))
+				throw new IllegalArgumentException("Cannot compute sum on an other generical Stream than Number");
+			return ((StreamVar) args[0]).sum();
+		}
 		super.illegalTypesException();
 		return null;
 	}

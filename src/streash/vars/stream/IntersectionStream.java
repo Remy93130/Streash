@@ -10,6 +10,8 @@ public class IntersectionStream implements StreamVar{
 	private StreamVar s2;
 	
 	public IntersectionStream(StreamVar s1, StreamVar s2) {
+		if (!(s1.getType().equals(s2.getType())))
+			throw new IllegalStateException("Cannot intersect two Streams of different generics");
 		this.s1 = s1.duplicate();
 		this.s2 = s2.duplicate();
 	}
@@ -21,6 +23,10 @@ public class IntersectionStream implements StreamVar{
 	@Override
 	public String getConsoleString() {
 		return "Intersection of "+s1.getConsoleString()+" and "+s2.getConsoleString();
+	}
+	@Override
+	public String getType() {
+		return s1.getType();
 	}
 	@Override
 	public long print() {
