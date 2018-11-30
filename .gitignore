@@ -8,3 +8,4 @@ _project.xml
 # ====
 
 bin/*
+/bin/

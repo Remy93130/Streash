@@ -118,7 +118,7 @@ public class Number implements Value {
 	}
 	public Number div(Number n) {
 		if (n.equals(new Number(0)))
-			throw new IllegalArgumentException("Cannot divide a Number by 0");
+			throw new ArithmeticException("Cannot divide a Number by 0");
 		return new Number(num*n.den, den*n.num).proper();
 	}
 	

@@ -1,10 +1,10 @@
-package test;
+package tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import streash.vars.CharChain;
 
-class TestCharChain {
+class CharChainTest {
 
     @Test
     void testConcat() {
