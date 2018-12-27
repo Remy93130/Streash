@@ -1,47 +1,70 @@
 package streash.vars.stream;
 
-import java.util.stream.Stream;
-
 import streash.vars.StreamVar;
 import streash.vars.Value;
 
 public class ConcatStream implements StreamVar{
-	private StreamVar s1;
-	private StreamVar s2;
+	private StreamVar[] ss;
+	private int index = 0;
 	
-	public ConcatStream(StreamVar s1, StreamVar s2) {
-		if (!(s1.getType().equals(s2.getType())))
-			throw new IllegalStateException("Cannot concat two Streams of different generics");
-		
-		this.s1 = s1.duplicate();
-		this.s2 = s2.duplicate();
+	private ConcatStream(StreamVar s1, StreamVar s2) {
+		this.ss = new StreamVar[2];
+		ss[0] = s1.duplicate();
+		ss[1] = s1.duplicate();
 	}
 	
-	@Override
-	public String getType(){
-		return s2.getType();
+	public static StreamVar getVar(StreamVar s1, StreamVar s2) {
+		if (s1 instanceof NumberStreamVar && s2 instanceof NumberStreamVar)
+			return new ConcatNumberStream(s1, s2);
+		if (s1 instanceof NumberStreamVar && s2 instanceof NumberStreamVar)
+			return new ConcatStringStream(s1, s2);
+		return null;
 	}
 	@Override
 	public StreamVar duplicate() {
-		return new ConcatStream(s1.duplicate(), s2.duplicate());
+		return new ConcatStream(ss[0].duplicate(), ss[1].duplicate());
 	}
+	
+	@Override
+	public boolean hasNext() {
+		if(ss[index].hasNext())
+			return true;
+		if (index == 1)
+			return false;
+		index++;
+		return ss[index].hasNext();
+	}
+	
+	@Override
+	public Value next() {
+		if (!hasNext())
+			throw new IllegalStateException("No more element in the Stream");
+		return ss[index].next();
+	}
+	
 	@Override
 	public String getConsoleString() {
-		return s1.getConsoleString()+" concatened with "+s2.getConsoleString();
+		return ss[0].getConsoleString()+" concatened with "+ss[1].getConsoleString();
 	}
-	@Override
-	public Stream<Value> getStream() {
-		return Stream.concat(s1.getStream(),  s2.getStream());
-	}
-	@Override
-	public long print() {
-		long size = 0;
-		size += s1.print();
-		size += s2.print();
-		return size;
-	}
+	
 	@Override
 	public long len() {
-		return s1.duplicate().len() + s2.duplicate().len();
+		return ss[0].duplicate().len() + ss[1].duplicate().len();
+	}
+	
+	@Override
+	public long print() {
+		return ss[0].duplicate().print() + ss[1].duplicate().print();
+	}
+	
+	public static class ConcatNumberStream extends ConcatStream implements NumberStreamVar {
+		public ConcatNumberStream(StreamVar s1, StreamVar s2) {
+			super(s1, s2);
+		}
+	}
+	public static class ConcatStringStream extends ConcatStream implements NumberStreamVar {
+		public ConcatStringStream(StreamVar s1, StreamVar s2) {
+			super(s1, s2);
+		}
 	}
 }

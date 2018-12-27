@@ -7,9 +7,11 @@ import streash.vars.functions.AbstractFunction;
 import streash.vars.stream.SliceStream;
 
 public class Slice extends AbstractFunction{
+	
 	public Slice() {
 		super(3);
 	}
+	
 	@Override
 	public Value evaluate() {
 		super.evaluate();
@@ -19,11 +21,12 @@ public class Slice extends AbstractFunction{
 			Number b = Number.requireNonFloat((Number) args[2], "Cannot slice a stream with floating Number");
 			StreamVar s = (StreamVar) args[0];
 			
-			return new SliceStream(s, a.getValue(), b.getValue());
+			return SliceStream.getVar(s, a.getValue(), b.getValue());
 		}
 		super.illegalTypesException();
 		return null;
 	}
+	
 	@Override
 	public String getName() {
 		return "slice";

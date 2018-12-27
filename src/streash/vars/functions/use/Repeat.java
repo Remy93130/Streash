@@ -7,9 +7,11 @@ import streash.vars.functions.AbstractFunction;
 import streash.vars.stream.RepeatStream;
 
 public class Repeat extends AbstractFunction{
+	
 	public Repeat() {
 		super(2);
 	}
+	
 	@Override
 	public Value evaluate() {
 		super.evaluate();
@@ -18,11 +20,12 @@ public class Repeat extends AbstractFunction{
 			Number a = ((Number) args[1]);
 			StreamVar s = (StreamVar) args[0];
 			
-			return new RepeatStream(s, a.getFloatingValue());
+			return RepeatStream.getVar(s, a.getFloatingValue());
 		}
 		super.illegalTypesException();
 		return null;
 	}
+	
 	@Override
 	public String getName() {
 		return "repeat";

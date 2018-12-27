@@ -2,6 +2,7 @@ package streash.console;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -9,7 +10,9 @@ import java.util.Scanner;
 import javax.naming.directory.NoSuchAttributeException;
 
 import streash.vars.CharChain;
+import streash.vars.Expression;
 import streash.vars.Function;
+import streash.vars.LambdaVar;
 import streash.vars.Value;
 import streash.vars.Number;
 
@@ -51,7 +54,7 @@ public class Console {
 				if (!(command.next().equals("=")))
 					throw new IllegalArgumentException("Wrong call of var affectation");
 			}
-			if(npi) { reverseScanner(); }
+			if (npi) { reverseScanner(); }
 			Value v = evaluateCommand();
 			if (command.hasNext())
 				throw new IllegalStateException("Too many arguments");
@@ -69,16 +72,61 @@ public class Console {
 	private void reverseScanner() {
 		ArrayList<String> list = new ArrayList<String>();
 		while (command.hasNext()) {
-			list.add(0, command.next());
+			String arg = command.next();
+			if (arg.startsWith("\""))
+				list.add(0, CharChain.parse(arg, command).getConsoleString());
+			else if (arg.startsWith("{"))
+				list.add(0, reverseLambda(arg));
+			else
+				list.add(0, arg);
+			
 			if (command.hasNext())
 				list.add(0, " ");
 		}
+		
 		StringBuilder sb = new StringBuilder();
 		for (String s : list) {
 			sb.append(s);
 		}
 		String c = sb.toString();
 		command = new Scanner(c);
+	}
+	
+	private String reverseLambda(String first) {
+		if (first.length() > 1)
+			throw new IllegalArgumentException("Syntax error");
+		if (!command.hasNext())
+			throw new IllegalStateException("Too few arguments");
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("{ ");
+		
+		ArrayList<String> list = new ArrayList<String>();
+		
+		while (command.hasNext()) {
+			String arg = command.next();
+			if (arg.endsWith("}")) {
+				if (arg.length() > 1)
+					throw new IllegalArgumentException("Syntax error");
+				break;
+			}
+			
+			if (arg.startsWith("\""))
+				list.add(0, CharChain.parse(arg, command).getConsoleString());
+			else if (arg.startsWith("{"))
+				list.add(0, reverseLambda(arg));
+			else
+				list.add(0, arg);
+			
+			if (command.hasNext())
+				list.add(0, " ");
+		}
+		for (String s : list) {
+			sb.append(s);
+		}
+		
+		sb.append(" }");
+		return sb.toString();
 	}
 	
 	private String nextTemp() {
@@ -96,12 +144,53 @@ public class Console {
 		String expr = command.next();
 		if (expr.matches("<.*>")) return evaluateFunction(expr);
 		if (expr.startsWith("\"")) return CharChain.parse(expr, command);
-		if (expr.startsWith("{")) throw new IllegalStateException("Unhandled lambda type for the moment");
+		if (expr.startsWith("{")) return parseLambda(expr);
 		if (isNumerical(expr)) return Number.parse(expr);
 		
 		Value var = vars.get(expr);
 		if (var == null) throw new NoSuchElementException("No var named "+expr+" registered");
 		return var;
+	}
+	
+	private LambdaVar parseLambda(String first) {
+		if (first.length() > 1)
+			throw new IllegalArgumentException("Syntax Error");
+		
+		List<Expression> comprehension = new ArrayList<Expression>();
+		while (command.hasNext()) {
+			String next = command.next();
+			if (next.endsWith("}")) {
+				if (next.length() > 1)
+					throw new IllegalArgumentException("Syntax Error");
+				break;
+			}
+			if (next.equals("it")) {
+				comprehension.add(null);
+				continue;
+			}
+			if (next.matches("<.*>")) {
+				comprehension.add(Function.getFunctionByName(next));
+				continue;
+			}
+			if (next.startsWith("\"")) {
+				comprehension.add(CharChain.parse(next, command));
+				continue;
+			}
+			if (next.startsWith("{")) {
+				comprehension.add(parseLambda(next));
+				continue;
+			}
+			
+			if (isNumerical(next)) {
+				comprehension.add(Number.parse(next));
+				continue;
+			}
+			
+			Value var = vars.get(next);
+			if (var == null) throw new NoSuchElementException("No var named "+next+" registered");
+			comprehension.add(var);
+		}
+		return LambdaVar.parse(comprehension, npi);
 	}
 	
 	public Value evaluateFunction(String functionName) {
@@ -111,40 +200,22 @@ public class Console {
 		}
 		return func.evaluate();
 	}
+	
 	private boolean isNumerical(String expr) {
 		return expr.matches("(-)?[0-9]*(/(-)?[0-9]*)?");
 	}
+	
 	private boolean isAlpha(String expr) {
 		return expr.matches("[a-zA-Z]{1}[a-zA-Z0-9_]*");
 	}
 	
 	public void computeMetaCommand(String name) throws NoSuchAttributeException {
 		if (name.equals("/printvar")) { printVar(); return; }
-
-		if (name.equals("/printvars")) { 
-			if (!(command.hasNext())) { printVars(); return; }
-			if (command.next().equals("alpha")) {
-				if (command.hasNext()) throw new IllegalArgumentException("Too may arguments");
-				printVarsAlpha();
-				return;
-			}
-			throw new IllegalArgumentException("Unkown argument");
-		}
-		if (name.equals("/notation")) {
-			if (!(command.hasNext())) { throw new IllegalStateException("Too few arguments for function notation"); }
-			String arg = command.next();
-			if (command.hasNext()) throw new IllegalStateException("Too many arguments");
-			if (arg.equals("npi")) {
-				npi = true;
-				return;
-			}
-			if (arg.equals("npr")) {
-				npi = false;
-				return;
-			}
-			throw new IllegalArgumentException("Unkown argument");
-		}
-		throw new IllegalArgumentException("Unknown command");
+		if (name.equals("/printvars")) { printVars(); return; }
+		if (name.equals("/notation")) { notation(); return; }
+		if (name.equals("/quit")) { quit(); return; }
+			
+		throw new IllegalArgumentException("Unknown meta command");
 	}
 	
 	public void printVar() throws NoSuchAttributeException {
@@ -160,27 +231,58 @@ public class Console {
 	}
 	
 	public void printVars() {
+		if (command.hasNext()) {
+			if (command.next().equals("alpha")) { printVarsAlpha(); return; }
+			throw new IllegalArgumentException("Unkown argument");
+		}
+		
 		order.forEach( (e) -> { 
 			System.out.print(e+" : "); 
 			System.out.println(vars.get(e).getConsoleString()); 
 			});
 	}
+	
 	public void printVarsAlpha() {
+		if (command.hasNext()) throw new IllegalArgumentException("Too may arguments");
+		
 		order.stream().sorted().forEach( (e) -> { 
 			System.out.print(e+" : "); 
 			System.out.println(vars.get(e).getConsoleString()); 
 			});
 	}
+	
+	private void notation() {
+		if (!(command.hasNext())) { throw new IllegalStateException("Too few arguments for function notation"); }
+		
+		String arg = command.next();
+		if (command.hasNext()) throw new IllegalStateException("Too many arguments");
+		
+		if (arg.equals("npi")) {
+			npi = true;
+			return;
+		}
+		if (arg.equals("npr")) {
+			npi = false;
+			return;
+		}
+		
+		throw new IllegalArgumentException("Unkown argument");
+	}
+	
+	private void quit() {
+		if (command.hasNext()) throw new IllegalStateException("Too few arguments for function quit");
+		System.exit(0);
+	}
+	
 	public static void main(String[] args) throws NoSuchAttributeException {
 		Console log = new Console();
 		while(true) {
-			try{
+//			try{
 				log.computeCommand();
-			} catch (Exception e) {
-				System.out.print("Error : ");
-				System.out.println(e.getMessage());
-			}
+//			} catch (Exception e) {
+//				System.out.print("Error : ");
+//				System.out.println(e.getMessage());
+//			}
 		}
-		
 	}
 }

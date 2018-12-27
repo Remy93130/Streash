@@ -53,5 +53,15 @@ public abstract class AbstractFunction implements Function{
 		}
 		throw new IllegalArgumentException(to.toString());
 	}
+	
 	abstract public String getName();
+	
+	@Override
+	public String toString() {
+		return getName()+" "+args;
+	}
+	@Override
+	public void empty() {
+		this.args.clear();	
+	}
 }

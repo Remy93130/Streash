@@ -6,9 +6,11 @@ import streash.vars.functions.AbstractFunction;
 import streash.vars.stream.FiboStream;
 
 public class Fibo extends AbstractFunction{
+	
 	public Fibo() {
 		super(2);
 	}
+	
 	@Override
 	public Value evaluate() {
 		super.evaluate();
@@ -21,6 +23,7 @@ public class Fibo extends AbstractFunction{
 		super.illegalTypesException();
 		return null;
 	}
+	
 	@Override
 	public String getName() {
 		return "fibo";

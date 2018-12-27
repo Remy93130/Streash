@@ -1,13 +1,13 @@
-package streash.vars.functions.use;
+package streash.vars.functions.sources;
 
-import streash.vars.StreamVar;
+import streash.vars.CharChain;
 import streash.vars.Value;
 import streash.vars.functions.AbstractFunction;
-import streash.vars.stream.SortedStream;
+import streash.vars.stream.BytesStream;
 
-public class Sorted extends AbstractFunction{
+public class Bytes extends AbstractFunction{
 	
-	public Sorted() {
+	public Bytes() {
 		super(1);
 	}
 	
@@ -15,14 +15,15 @@ public class Sorted extends AbstractFunction{
 	public Value evaluate() {
 		super.evaluate();
 		Value[] args = super.getArgs();
-		if (args[0] instanceof StreamVar)
-			return SortedStream.getVar((StreamVar) args[0]);
+		if (args[0] instanceof CharChain)
+			return new BytesStream((CharChain) args[0]);
+
 		super.illegalTypesException();
 		return null;
 	}
 	
 	@Override
 	public String getName() {
-		return "sorted";
+		return "bytes";
 	}
 }

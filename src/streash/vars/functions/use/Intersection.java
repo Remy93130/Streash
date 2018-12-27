@@ -6,6 +6,7 @@ import streash.vars.functions.AbstractFunction;
 import streash.vars.stream.IntersectionStream;
 
 public class Intersection extends AbstractFunction{
+	
 	public Intersection() {
 		super(2);
 	}
@@ -14,10 +15,11 @@ public class Intersection extends AbstractFunction{
 		super.evaluate();
 		Value[] args = super.getArgs();
 		if (args[0] instanceof StreamVar && args[1] instanceof StreamVar)
-			return new IntersectionStream((StreamVar) args[0], (StreamVar) args[1]);
+			return IntersectionStream.getVar((StreamVar) args[0], (StreamVar) args[1]);
 		super.illegalTypesException();
 		return null;
 	}
+	
 	@Override
 	public String getName() {
 		return "inter";

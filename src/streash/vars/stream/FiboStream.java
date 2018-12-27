@@ -1,38 +1,43 @@
 package streash.vars.stream;
 
-import java.util.stream.Stream;
-
 import streash.vars.Number;
 import streash.vars.StreamVar;
 import streash.vars.Value;
 
 public class FiboStream implements NumberStreamVar{
-	private long from;
-	private long to;
-	private Stream<Value> stream;
+	private final long first;
+	private final long second;
+	private Number current1;
+	private Number current2;
 	
-	public FiboStream(long from, long to) {
-		this.from = from;
-		this.to = to;
-		this.stream = Stream.iterate(new long[] {from, to}, p->new long[] {p[1], p[0]+p[1] })
-			.map(l -> { return new Number(l[0]); });
+	
+	public FiboStream(long first, long second) {
+		this.first = first;
+		this.second = second;
+		this.current1 = new Number(first);
+		this.current1 = new Number(second);
 	}
 	
 	@Override
 	public String getConsoleString() {
-		return "Fibonacci sequence with "+from+" and "+to+" as firsts terms";
-	}
-	@Override
-	public StreamVar duplicate() {
-		return new FiboStream(from, to);
-	}
-	@Override
-	public long print() {
-		return stream.mapToLong(i -> {System.out.println(i); return 1L; }).sum();
+		return "Fibonacci sequence with "+first+" and "+second+" as firsts terms";
 	}
 	
 	@Override
-	public Stream<Value> getStream() {
-		return stream;
+	public StreamVar duplicate() {
+		return new FiboStream(first, second);
+	}
+	
+	@Override
+	public boolean hasNext() {
+		return true;
+	}
+	
+	@Override
+	public Value next() {
+		Number to = current1.add(current2);
+		current1 = current2;
+		current2 = to;
+		return to;
 	}
 }

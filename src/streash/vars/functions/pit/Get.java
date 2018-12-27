@@ -1,30 +1,27 @@
 package streash.vars.functions.pit;
 
+import streash.vars.Number;
 import streash.vars.StreamVar;
 import streash.vars.Value;
 import streash.vars.functions.AbstractFunction;
-import streash.vars.stream.NumberStreamVar;
 
-public class Product extends AbstractFunction{
-	public Product() {
-		super(1);
+public class Get extends AbstractFunction{
+	public Get() {
+		super(2);
 	}
 	@Override
 	public Value evaluate() {
 		super.evaluate();
 		Value[] args = super.getArgs();
 		if (args[0] instanceof StreamVar) {
-			StreamVar s = (StreamVar) args[0];
-			if (!(s instanceof NumberStreamVar))
-				throw new IllegalArgumentException("Cannot compute product on an other generical Stream than Number");
-			return s.product();
+			Number.requireNonFloat((Number) args[1], "Unable to call get with a floating index");
+			return ((StreamVar) args[0]).get(((Number) args[1]).getValue());
 		}
 		super.illegalTypesException();
 		return null;
 	}
-	
 	@Override
 	public String getName() {
-		return "product";
+		return "len";
 	}
 }

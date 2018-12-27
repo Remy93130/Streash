@@ -2,16 +2,14 @@ package streash.vars;
 
 import java.util.Scanner;
 
-public class CharChain implements Value{
+public class CharChain implements Primitive{
 	private String value;
 	
 	public CharChain(String value) {
 		this.value = value;
 	}
 	
-	public String toString() {
-		return value;
-	}
+	@Override
 	public String getConsoleString(){
 		return "\""+value+"\"";
 	}
@@ -21,9 +19,6 @@ public class CharChain implements Value{
 		return "String";
 	}
 	
-	public CharChain concat(CharChain c) {
-		return new CharChain(value.concat(c.value));
-	}
 	@Override
 	public int compareTo(Object arg0) {
 		if (arg0 instanceof Number)
@@ -31,6 +26,15 @@ public class CharChain implements Value{
 		CharChain c = (CharChain) arg0;
 		return c.value.compareTo(value);
 	}
+	
+	public String toString() {
+		return value;
+	}
+	
+	public CharChain concat(CharChain c) {
+		return new CharChain(value.concat(c.value));
+	}
+	
 	public CharChain time(long i) {
 		if (i < 0)
 			throw new IllegalArgumentException("Cannot time a String by a negative number");
@@ -49,8 +53,7 @@ public class CharChain implements Value{
 		return new CharChain(value.substring(0, value.length()-string.length()));
 	}
 
-	private boolean isSuffix(String sub, String string) 
-	{ 
+	private boolean isSuffix(String sub, String string) { 
 	    int n1 = sub.length(), n2 = string.length(); 
 	    if (n1 > n2) 
 	      return false; 
@@ -81,35 +84,5 @@ public class CharChain implements Value{
 			to.append(' ');
 			part = s.next();
 		}
-	}
-	
-	@Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((value == null) ? 0 : value.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        CharChain other = (CharChain) obj;
-        if (value == null) {
-            if (other.value != null)
-                return false;
-        } else if (!value.equals(other.value))
-            return false;
-        return true;
-    }
-
-    public static void main(String[] args) {
-		Scanner s = new Scanner(System.in);
-		System.out.println(CharChain.parse("\"armand", s));
 	}
 }

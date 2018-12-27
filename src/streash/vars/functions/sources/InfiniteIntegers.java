@@ -12,6 +12,7 @@ public class InfiniteIntegers extends AbstractFunction{
 		super(1);
 		this.reversed = reversed;
 	}
+	
 	@Override
 	public Value evaluate() {
 		super.evaluate();
@@ -24,8 +25,11 @@ public class InfiniteIntegers extends AbstractFunction{
 		super.illegalTypesException();
 		return null;
 	}
+	
 	@Override
 	public String getName() {
+		if (reversed)
+			return "revintegers";
 		return "integers";
 	}
 }

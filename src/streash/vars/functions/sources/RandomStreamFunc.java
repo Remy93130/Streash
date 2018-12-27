@@ -6,6 +6,7 @@ import streash.vars.functions.AbstractFunction;
 import streash.vars.stream.RandomStream;
 
 public class RandomStreamFunc extends AbstractFunction{
+	
 	public RandomStreamFunc() {
 		super(3);
 	}
@@ -23,6 +24,7 @@ public class RandomStreamFunc extends AbstractFunction{
 		super.illegalTypesException();
 		return null;
 	}
+	
 	@Override
 	public String getName() {
 		return "random";

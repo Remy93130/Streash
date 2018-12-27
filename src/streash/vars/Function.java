@@ -11,11 +11,15 @@ import streash.vars.functions.primitive.Add;
 import streash.vars.functions.primitive.Div;
 import streash.vars.functions.primitive.Mul;
 import streash.vars.functions.primitive.Sub;
+import streash.vars.functions.sources.Bytes;
 import streash.vars.functions.sources.Fibo;
 import streash.vars.functions.sources.InfiniteIntegers;
+import streash.vars.functions.sources.Lines;
 import streash.vars.functions.sources.RandomStreamFunc;
 import streash.vars.functions.use.Concat;
+import streash.vars.functions.use.Filter;
 import streash.vars.functions.use.Intersection;
+import streash.vars.functions.use.Map;
 import streash.vars.functions.use.Repeat;
 import streash.vars.functions.use.Shuffle;
 import streash.vars.functions.use.Slice;
@@ -32,12 +36,16 @@ public interface Function extends Expression{
 		if (name.equals("<revintegers>")){ return new InfiniteIntegers(true); }
 		if (name.equals("<random>")){ return new RandomStreamFunc(); }
 		if (name.equals("<fibo>")){ return new Fibo(); }
+		if (name.equals("<lines>")){ return new Lines(); }
+		if (name.equals("<bytes>")){ return new Bytes(); }
 		// stream actions
 		if (name.equals("<slice>")){ return new Slice(); }
 		if (name.equals("<repeat>")){ return new Repeat(); }
 		if (name.equals("<concat>")){ return new Concat(); }
 		if (name.equals("<inter>")){ return new Intersection(); }
 		if (name.equals("<shuffle>")){ return new Shuffle(); }
+		if (name.equals("<map>")){ return new Map(); }
+		if (name.equals("<filter>")){ return new Filter(); }
 		// stream products
 		if (name.equals("<print>")){ return new Print(); }
 		if (name.equals("<len>")){ return new Len(); }
@@ -51,4 +59,5 @@ public interface Function extends Expression{
 	public void takeArgument(Value v, boolean npi);
 	public int argNumber();
 	public Value evaluate();
+	public void empty();
 }

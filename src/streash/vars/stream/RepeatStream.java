@@ -1,80 +1,84 @@
 package streash.vars.stream;
 
-import java.util.stream.Stream;
-
 import streash.vars.StreamVar;
 import streash.vars.Value;
 
 public class RepeatStream implements StreamVar{
 	private float repeat;
 	private StreamVar s;
+	private int index = 0;
+	private int point = 0;
+	private int len;
+	private StreamVar current;
 	
-	public RepeatStream(StreamVar s, float a) {
+	private RepeatStream(StreamVar s, float a) {
 		if (a < 0)
 			throw new IllegalArgumentException("Cannot use repeat() with a negative value");
 		this.repeat = a;
 		this.s = s.duplicate();
+		this.len = (int) s.len();
+		this.current = s.duplicate();
 	}
+	
+	public static StreamVar getVar(StreamVar s, float a) {
+		if (s instanceof NumberStreamVar)
+			return new RepeatNumberStream(s, a);
+		if (s instanceof StringStreamVar)
+			return new RepeatStringStream(s, a);
+		return null;
+	}
+ 	
 	@Override
 	public StreamVar duplicate() {
 		return new RepeatStream(s.duplicate(), repeat);
 	}
+	
 	@Override
 	public String getConsoleString() {
 		return s.getConsoleString()+" repeated "+repeat+" times";
 	}
 	
 	@Override
-	public String getType() {
-		return s.getType();
-	}
-	@Override
-	public long print() {
-		float end;
-		int time;
-		if ((int) repeat == repeat)
-			end = 0;
-		else
-			end = repeat - ((int) repeat);
-		time = (int) repeat;
-		
-		StreamVar backup;
-		long size = 0;
-		long unit_size = 0;
-		for (int i = 0; i < time; i++) {
-			backup = s.duplicate();
-			size += s.getStream().mapToLong(x -> {System.out.println(x); return 1L;}).sum();
-			if (unit_size == 0)
-				unit_size = size;
-			s = backup;
+	public boolean hasNext() {
+		if (index <= (int) repeat) {
+			if (current.hasNext())
+				return true;
+			current = s.duplicate();
+			index++;
+			point = 0;
+			return hasNext();
 		}
-		size += s.getStream().limit((long) (unit_size * end)).mapToLong(x -> {System.out.println(x); return 1L;}).sum();
-		return size;
+		if (((float) point / len) >= repeat - (int) repeat)
+			return false;
+		if (current.hasNext())
+			return true;
+		return false;
 	}
 	
 	@Override
-	public Stream<Value> getStream() {
-		float end;
-		int time;
-		if ((int) repeat == repeat)
-			end = 0;
-		else
-			end = repeat - ((int) repeat);
-		time = (int) repeat;
-		
-		StreamVar backup;
-		Stream<Value> to = Stream.empty();
-		
-		backup = s.duplicate();
-		long size = s.getStream().mapToLong(x -> 1L).sum();
-		s = backup;
-		
-		for (int i = 0; i < time; i++) {
-			backup = s.duplicate();
-			to = Stream.concat(to, s.getStream());
-			s = backup;
+	public Value next() {
+		if (hasNext()) {
+			point++;
+			return current.next();
 		}
-		to = Stream.concat(to, s.getStream().limit((long) (size * end)));
-		return to;
+		throw new IllegalStateException("No such element");
+	}
+	
+	public static class RepeatNumberStream extends RepeatStream implements NumberStreamVar {
+		public RepeatNumberStream(StreamVar s, float a) {
+			super(s, a);
+		}
+	}
+	public static class RepeatStringStream extends RepeatStream implements NumberStreamVar {
+		public RepeatStringStream(StreamVar s, float a) {
+			super(s, a);
+		}
+	}
+	
+	public static void main(String[] args) {
+		StreamVar inf = new InfiniteIntegersStream(0, false);
+		StreamVar slice = SliceStream.getVar(inf, 0, 9);
+		StreamVar s = RepeatStream.getVar(slice, (float) 2.5);
+		s.print();
 	}
 }

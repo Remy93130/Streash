@@ -1,6 +1,6 @@
 package streash.vars;
 
-public class Number implements Value {
+public class Number implements Primitive {
 	private long num;
 	private long den;
 	
@@ -12,23 +12,35 @@ public class Number implements Value {
 		else
 			this.proper();
 	}
+	
 	public Number(long value) {
 		this.num = value;
 		this.den = 1;
 	}
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Number))
-			return false;
-		Number n = (Number) obj;
-		return n.num == num && n.den == den;
+	
+	public String getConsoleString() {
+		return this.toString();
 	}
+	
+	@Override
+	public String getType() {
+		return "Number";
+	}
+	
 	@Override
 	public int compareTo(Object arg0) {
 		if (arg0 instanceof CharChain)
 			return -1;
 		Number n = (Number) arg0;
 		return Float.valueOf((float) num / den).compareTo(Float.valueOf((float) n.num/n.den));
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Number))
+			return false;
+		Number n = (Number) obj;
+		return n.num == num && n.den == den;
 	}
 	
 	@Override
@@ -39,21 +51,17 @@ public class Number implements Value {
 			return String.valueOf(-num);
 		return String.valueOf(num)+"/"+String.valueOf(den)+" ~= "+String.valueOf((float) num/den);
 	}
-	public String getConsoleString() {
-		return this.toString();
-	}
-	@Override
-	public String getType() {
-		return "Number";
-	}
+
 	public long getValue() {
 		if (den != 1)
 			throw new IllegalStateException("Cannot give value of floating Number");
 		return num;
 	}
+	
 	public float getFloatingValue() {
 		return (float) num / den;
 	}
+	
 	public static Number requireNonFloat(Number n, String message) {
 		if(!n.isInteger())
 			throw new IllegalArgumentException(message);
@@ -86,6 +94,7 @@ public class Number implements Value {
 		this.den = den/pgcd;
 		return this;
 	}
+	
 	private long pgcd(long a, long b) {
 		long c;
 		if (a < b) { c = a; a = b; b = c; }
@@ -97,6 +106,7 @@ public class Number implements Value {
 		}
 		return b;
 	}
+	
 	public Number add(Number n) {
 		if (n.equals(new Number(0)))
 			return this;
@@ -113,18 +123,21 @@ public class Number implements Value {
 			return n.mul(new Number(-1));
 		return new Number(num*n.den - n.num*den, den*n.den).proper();
 	}
+	
 	public Number mul(Number n) {
 		return new Number(num*n.num, den*n.den).proper();
 	}
+	
 	public Number div(Number n) {
 		if (n.equals(new Number(0)))
-			throw new ArithmeticException("Cannot divide a Number by 0");
+			throw new IllegalArgumentException("Cannot divide a Number by 0");
 		return new Number(num*n.den, den*n.num).proper();
 	}
 	
 	public boolean isInteger() {
 		return den == 1;
 	}
+	
 	public long getNum() {
 		return num;
 	}

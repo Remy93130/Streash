@@ -15,9 +15,9 @@ public class Sum extends AbstractFunction{
 		Value[] args = super.getArgs();
 		if (args[0] instanceof StreamVar) {
 			StreamVar s = (StreamVar) args[0];
-			if (!(s.getType().equals(NumberStreamVar.type())))
+			if (!(s instanceof NumberStreamVar))
 				throw new IllegalArgumentException("Cannot compute sum on an other generical Stream than Number");
-			return ((StreamVar) args[0]).sum();
+			return s.sum();
 		}
 		super.illegalTypesException();
 		return null;
