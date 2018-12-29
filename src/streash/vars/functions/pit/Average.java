@@ -5,7 +5,7 @@ import streash.vars.Value;
 import streash.vars.functions.AbstractFunction;
 import streash.vars.stream.NumberStreamVar;
 
-public class Average extends AbstractFunction{
+public class Average extends AbstractFunction implements PitStreamFunction{
 	public Average() {
 		super(1);
 	}
@@ -27,4 +27,5 @@ public class Average extends AbstractFunction{
 	public String getName() {
 		return "average";
 	}
+	
 }

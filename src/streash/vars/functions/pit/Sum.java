@@ -5,7 +5,7 @@ import streash.vars.Value;
 import streash.vars.functions.AbstractFunction;
 import streash.vars.stream.NumberStreamVar;
 
-public class Sum extends AbstractFunction{
+public class Sum extends AbstractFunction implements PitStreamFunction{
 	public Sum() {
 		super(1);
 	}

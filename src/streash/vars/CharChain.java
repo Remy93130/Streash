@@ -2,6 +2,8 @@ package streash.vars;
 
 import java.util.Scanner;
 
+import org.json.JSONObject;
+
 public class CharChain implements Primitive{
 	private String value;
 	
@@ -84,5 +86,34 @@ public class CharChain implements Primitive{
 			to.append(' ');
 			part = s.next();
 		}
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof CharChain))
+			return false;
+		CharChain c = (CharChain) obj;
+		return c.value.equals(value);
+	}
+	
+	@Override
+	public int hashCode() {
+		return value.hashCode();
+	}
+	
+	@Override
+	public JSONObject getJSONObject() {
+		JSONObject o = new JSONObject();
+		o.put("type", "String");
+		o.put("Value", new JSONObject().put("Value", value));
+		return o;
+	}
+	
+	public static boolean hasJSONTag(String tag) {
+		return tag.equals("String");
+	}
+	
+	public static CharChain getValueFromJSON(JSONObject o) {
+		return new CharChain(o.getJSONObject("Value").getString("Value"));
 	}
 }

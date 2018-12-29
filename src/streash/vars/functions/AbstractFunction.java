@@ -3,7 +3,11 @@ package streash.vars.functions;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import streash.vars.Function;
+import streash.vars.StreamVar;
 import streash.vars.Value;
 
 public abstract class AbstractFunction implements Function{
@@ -47,10 +51,10 @@ public abstract class AbstractFunction implements Function{
 		to.append("Unhandeled call ").append(getName()).append("(");
 		boolean first = true;
 		for(Value arg : args) {
-			if(!true) to.append(", ");
-			else first = false;
+			to.append(", ");
 			to.append(arg.getType());
 		}
+		to.append(")");
 		throw new IllegalArgumentException(to.toString());
 	}
 	
@@ -63,5 +67,16 @@ public abstract class AbstractFunction implements Function{
 	@Override
 	public void empty() {
 		this.args.clear();	
+	}
+	
+	@Override
+	public StreamVar getStreamFromJSON(JSONObject json, boolean npi) {
+		JSONArray array = json.getJSONArray("Args");
+		for (int i = 0; i < n; i++)
+			takeArgument(Value.getValueFromJSON(array.getJSONObject(i)), npi);
+		Value ev = evaluate();
+		if (!(ev instanceof StreamVar))
+			throw new IllegalStateException();
+		return (StreamVar) ev;
 	}
 }

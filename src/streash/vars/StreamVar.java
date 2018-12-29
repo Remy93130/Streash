@@ -3,7 +3,10 @@ package streash.vars;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import streash.vars.stream.NumberStreamVar;
+import streash.vars.stream.StringStreamVar;
 
 public interface StreamVar extends Value {
 	@Override
@@ -116,5 +119,44 @@ public interface StreamVar extends Value {
 				max = temp;
 		}
 		return max;
+	}
+	default Value count(Value v) {
+		StreamVar s = this.duplicate();
+		int count = 0;
+		while (s.hasNext())
+			if (s.next().equals(v))
+				count++;
+		return new Number(count);
+	}
+	default Value join(String join) {
+		if (!(this instanceof StringStreamVar))
+			throw new IllegalArgumentException("Cannot call join on a NumberStream");
+		StringBuilder sb = new StringBuilder();
+		StreamVar s = this.duplicate();
+		if (s.hasNext())
+			sb.append(s.next().toString());
+		else
+			return new CharChain("");
+		while (true) {
+			if (s.hasNext()) {
+				sb.append(join);
+				sb.append(s.next());
+			}
+			else
+				break;
+		}
+		return new CharChain(sb.toString());
+	}
+	
+	public static boolean hasJSONTag(String tag) {
+		return tag.equals("Stream");
+	}
+	public static StreamVar getValueFromJSON(JSONObject o, boolean npi) {
+		return Function.getFunctionByName("<"+o.getString("Name")+">").getStreamFromJSON(o, npi);
+	}
+	public static JSONObject getJSONObjectInstance() {
+		JSONObject o = new JSONObject();
+		o.put("type", "Stream");
+		return o;
 	}
 }

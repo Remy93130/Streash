@@ -5,7 +5,7 @@ import streash.vars.Value;
 import streash.vars.functions.AbstractFunction;
 import streash.vars.stream.NumberStreamVar;
 
-public class Product extends AbstractFunction{
+public class Product extends AbstractFunction implements PitStreamFunction{
 	public Product() {
 		super(1);
 	}

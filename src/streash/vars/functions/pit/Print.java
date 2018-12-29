@@ -6,7 +6,7 @@ import streash.vars.functions.AbstractFunction;
 import streash.vars.CharChain;
 import streash.vars.Number;
 
-public class Print extends AbstractFunction{
+public class Print extends AbstractFunction implements PitStreamFunction{
 	public Print() {
 		super(2);
 	}

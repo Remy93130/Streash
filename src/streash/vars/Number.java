@@ -1,5 +1,7 @@
 package streash.vars;
 
+import org.json.JSONObject;
+
 public class Number implements Primitive {
 	private long num;
 	private long den;
@@ -41,6 +43,11 @@ public class Number implements Primitive {
 			return false;
 		Number n = (Number) obj;
 		return n.num == num && n.den == den;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Float.valueOf(this.getFloatingValue()).hashCode();
 	}
 	
 	@Override
@@ -140,5 +147,23 @@ public class Number implements Primitive {
 	
 	public long getNum() {
 		return num;
+	}
+	@Override
+	public JSONObject getJSONObject() {
+		JSONObject o = new JSONObject();
+		o.put("type", "Number");
+		JSONObject number = new JSONObject();
+		number.put("Num", num);
+		number.put("Den", den);
+		o.put("Value", number);
+		return o;
+	}
+	
+	public static boolean hasJSONTag(String tag) {
+		return tag.equals("Number");
+	}
+	
+	public static Value getValueFromJSON(JSONObject o) {
+		return new Number(o.getInt("Num"), o.getInt("Den"));
 	}
 }
