@@ -17,6 +17,12 @@ public class Sub extends AbstractFunction{
 		super(2);
 	}
 	
+	/**
+	 * Caculate the difference of the two values in the function
+	 * 
+	 * @return the difference of the two values if Number. Return the first
+	 *         CharChain without the second CharChain at the end
+	 */
 	@Override
 	public Value evaluate() {
 		super.evaluate();

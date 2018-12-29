@@ -59,6 +59,11 @@ public class Number implements Primitive {
 		return String.valueOf(num)+"/"+String.valueOf(den)+" ~= "+String.valueOf((float) num/den);
 	}
 
+	/**
+	 * Return the value of the number if the number is an integer
+	 * 
+	 * @return this object's num
+	 */
 	public long getValue() {
 		if (den != 1)
 			throw new IllegalStateException("Cannot give value of floating Number");
@@ -75,6 +80,14 @@ public class Number implements Primitive {
 		return n;
 	}
 	
+	/**
+	 * Create a new number with the values given in the expr. If the expr contains
+	 * more than 2 values, an exception is throw
+	 * 
+	 * @param expr
+	 *            the expr that contains the values
+	 * @return a new number with the values given in the expr
+	 */
 	public static Number parse(String expr) {
 		String[] split = expr.split("/");
 		if (split.length > 2)
@@ -84,6 +97,10 @@ public class Number implements Primitive {
 		return new Number(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
 	}
 	
+	/**
+	 * 
+	 * @return the fraction in a simplified form
+	 */
 	private Number proper() {
 		if (den == num) {
 			num = 1;
@@ -114,6 +131,14 @@ public class Number implements Primitive {
 		return b;
 	}
 	
+	/**
+	 * Calculate the sum of this object's values and the values of the number passed
+	 * in argument
+	 * 
+	 * @param n
+	 *            a number (in a fraction form)
+	 * @return the result of the sum of the two Number
+	 */
 	public Number add(Number n) {
 		if (n.equals(new Number(0)))
 			return this;
@@ -123,6 +148,14 @@ public class Number implements Primitive {
 		return new Number(num*n.den + n.num*den, den*n.den).proper();
 	}
 	
+	/**
+	 * Calculate the difference of this object's values and the values of the number passed
+	 * in argument
+	 * 
+	 * @param n
+	 *            a number (in a fraction form)
+	 * @return the result of the difference between the two Number
+	 */
 	public Number sub(Number n) {
 		if (n.equals(new Number(0)))
 			return this;
@@ -131,10 +164,26 @@ public class Number implements Primitive {
 		return new Number(num*n.den - n.num*den, den*n.den).proper();
 	}
 	
+	/**
+	 * Calculate the product of this object's values and the values of the number passed
+	 * in argument
+	 * 
+	 * @param n
+	 *            a number (in a fraction form)
+	 * @return the result of the product of the two Number
+	 */
 	public Number mul(Number n) {
 		return new Number(num*n.num, den*n.den).proper();
 	}
 	
+	/**
+	 * Calculate the quotient of this object's values and the values of the number passed
+	 * in argument
+	 * 
+	 * @param n
+	 *            a number (in a fraction form)
+	 * @return the result of the quotient of the two Number
+	 */
 	public Number div(Number n) {
 		if (n.equals(new Number(0)))
 			throw new IllegalArgumentException("Cannot divide a Number by 0");

@@ -18,6 +18,11 @@ public class Sorted extends AbstractFunction{
 		super(1);
 	}
 	
+	/**
+	 * 
+	 * @return a new stream in which the values are in ascending order if the values
+	 *         are Number. Otherwise the values are in the alphabetical order
+	 */
 	@Override
 	public Value evaluate() {
 		super.evaluate();

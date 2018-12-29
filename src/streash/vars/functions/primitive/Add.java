@@ -17,6 +17,13 @@ public class Add extends AbstractFunction{
 	public Add() {
 		super(2);
 	}
+
+	/**
+	 * Caculate the sum of the two values in the function
+	 * 
+	 * @return the sum of the two values if Number. Return the concatenation of the
+	 *         two values if CharChain otherwise
+	 */
 	@Override
 	public Value evaluate() {
 		super.evaluate();

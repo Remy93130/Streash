@@ -17,6 +17,11 @@ public class InfiniteIntegers extends AbstractFunction{
 		this.reversed = reversed;
 	}
 	
+	/**
+	 * 
+	 * @return a stream containing the number from the value to the infinite or from
+	 *         minus infinite to the value
+	 */
 	@Override
 	public Value evaluate() {
 		super.evaluate();

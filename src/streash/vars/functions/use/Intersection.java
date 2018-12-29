@@ -18,6 +18,11 @@ public class Intersection extends AbstractFunction{
 	public Intersection() {
 		super(2);
 	}
+
+	/**
+	 * 
+	 * @return a new stream in which the values are present in both streams of the function
+	 */
 	@Override
 	public Value evaluate() {
 		super.evaluate();

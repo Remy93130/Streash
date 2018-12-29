@@ -37,6 +37,14 @@ public class CharChain implements Primitive{
 		return new CharChain(value.concat(c.value));
 	}
 	
+	/**
+	 * Multiply this object's value by the number indicated in the argument
+	 * 
+	 * @param i
+	 *            the number of time the value is going to be multiplicated
+	 * @return a new Charchain that represents this object's value multiplied i
+	 *         times
+	 */
 	public CharChain time(long i) {
 		if (i < 0)
 			throw new IllegalArgumentException("Cannot time a String by a negative number");
@@ -47,7 +55,15 @@ public class CharChain implements Primitive{
 		return new CharChain(builder.toString());
 	}
 	
-
+	/**
+	 * Remove the Charchain passed in argument from the end of this object's value
+	 * if the argument is a suffix of the value
+	 * 
+	 * @param c
+	 *            the Charchain that will be removed
+	 * @return a new Charchain that represent this object's value without the
+	 *         argument at the end
+	 */
 	public CharChain subSuffix(CharChain c) {
 		String string = c.value;
 		if (!isSuffix(string, value))
@@ -55,6 +71,14 @@ public class CharChain implements Primitive{
 		return new CharChain(value.substring(0, value.length()-string.length()));
 	}
 
+	/**
+	 * 
+	 * @param sub
+	 *            the suffix
+	 * @param string
+	 *            the Charchain
+	 * @return true if the sub is a suffix of string. False otherwise.
+	 */
 	private boolean isSuffix(String sub, String string) { 
 	    int n1 = sub.length(), n2 = string.length(); 
 	    if (n1 > n2) 
@@ -65,6 +89,17 @@ public class CharChain implements Primitive{
 	    return true; 
 	} 
 	
+	/**
+	 * Create a new CharChain with the content in the string and scanner
+	 * 
+	 * @param beginning
+	 *            a string
+	 * @param s
+	 *            the scanner that represents the command written by the user (use "
+	 *            to quit)
+	 * @return a new Charchain that contains the string beginning followed by the
+	 *         strings written by the user in the scanner
+	 */
 	public static CharChain parse(String beginning, Scanner s) {
 		StringBuilder to = new StringBuilder();
 		boolean end = false;

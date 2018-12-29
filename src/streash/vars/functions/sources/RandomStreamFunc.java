@@ -17,6 +17,12 @@ public class RandomStreamFunc extends AbstractFunction{
 	public RandomStreamFunc() {
 		super(3);
 	}
+
+	/**
+	 * 
+	 * @return a stream containing random numbers between the first two values
+	 *         of the function
+	 */
 	@Override
 	public Value evaluate() {
 		super.evaluate();

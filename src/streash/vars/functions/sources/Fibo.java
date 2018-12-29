@@ -14,6 +14,11 @@ public class Fibo extends AbstractFunction{
 		super(2);
 	}
 	
+	/**
+	 * 
+	 * @return a stream containing the number Fibonacci starting with the values a
+	 *         and b
+	 */
 	@Override
 	public Value evaluate() {
 		super.evaluate();

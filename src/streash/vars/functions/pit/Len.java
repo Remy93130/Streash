@@ -9,6 +9,12 @@ public class Len extends AbstractFunction implements PitStreamFunction{
 	public Len() {
 		super(1);
 	}
+
+	/**
+	 * Caculate the length of the stream
+	 * 
+	 * @return the length of the stream
+	 */
 	@Override
 	public Value evaluate() {
 		super.evaluate();

@@ -18,6 +18,11 @@ public class Slice extends AbstractFunction{
 		super(3);
 	}
 	
+	/**
+	 * 
+	 * @return a new stream that represents the values between two index of the
+	 *         stream passed in the function
+	 */
 	@Override
 	public Value evaluate() {
 		super.evaluate();

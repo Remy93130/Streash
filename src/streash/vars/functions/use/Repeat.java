@@ -16,6 +16,10 @@ public class Repeat extends AbstractFunction{
 		super(2);
 	}
 	
+	/**
+	 * 
+	 * @return a new stream that represents the repetition of the stream of the function
+	 */
 	@Override
 	public Value evaluate() {
 		super.evaluate();

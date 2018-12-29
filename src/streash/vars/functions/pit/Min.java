@@ -8,6 +8,12 @@ public class Min extends AbstractFunction implements PitStreamFunction{
 	public Min() {
 		super(1);
 	}
+
+	/**
+	 * Caculate the minimum of the stream
+	 * 
+	 * @return the minimum of the stream
+	 */
 	@Override
 	public Value evaluate() {
 		super.evaluate();

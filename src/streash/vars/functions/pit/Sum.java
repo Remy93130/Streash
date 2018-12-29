@@ -9,6 +9,12 @@ public class Sum extends AbstractFunction implements PitStreamFunction{
 	public Sum() {
 		super(1);
 	}
+
+	/**
+	 * Caculate the sum of the values of the stream if the values are Number
+	 * 
+	 * @return the sum of the values of the stream
+	 */
 	@Override
 	public Value evaluate() {
 		super.evaluate();

@@ -22,6 +22,14 @@ public abstract class AbstractFunction implements Function{
 	@Override
 	public int argNumber() { return n; }
 	
+	/**
+	 * Add an argument in the function
+	 * 
+	 * @param v
+	 *            the new argument
+	 * @param npi
+	 *            if the expression is in Reverse Polish Notation
+	 */
 	@Override
 	public void takeArgument(Value v, boolean npi) { 
 		Objects.requireNonNull(v, "Cannot add a null argument");
@@ -31,6 +39,9 @@ public abstract class AbstractFunction implements Function{
 			args.add(v);
 	}
 	
+	/**
+	 * Check if there is enough argument for the function
+	 */
 	@Override
 	public Value evaluate() {
 		if (args.size() < n)
@@ -38,6 +49,10 @@ public abstract class AbstractFunction implements Function{
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @return the values of the function in a table
+	 */
 	public Value[] getArgs() {
 		Value[] toReturn = new Value[n];
 		for (int i = 0; i < toReturn.length; i++)

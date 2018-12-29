@@ -8,6 +8,12 @@ public class Max extends AbstractFunction implements PitStreamFunction{
 	public Max() {
 		super(1);
 	}
+
+	/**
+	 * Find the maximum of the stream
+	 * 
+	 * @return the maximum of the stream
+	 */
 	@Override
 	public Value evaluate() {
 		super.evaluate();
