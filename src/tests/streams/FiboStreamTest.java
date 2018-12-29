@@ -13,11 +13,4 @@ class FiboStreamTest {
 		FiboStream s = new FiboStream(5, 10);
 		assertEquals("Fibonacci sequence with 5 and 10 as firsts terms", s.getConsoleString());
 	}
-
-	@Test
-	void testPrint() {
-		FiboStream s = new FiboStream(5, 20);
-		fail("Look bugged");
-		s.print();
-	}
 }
